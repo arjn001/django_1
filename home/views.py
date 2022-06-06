@@ -43,4 +43,43 @@ class SearchView(BaseView):
 		self.views['search.for'] = query
 		return render(request,'search.html', self.views)
 
+from django.contrib.messages import get_messages
+from django.contrib.auth.models import User
+def signup(request):
+	if request.method == "POST":
+		username = request.POST['username']
+		email = request.POST['email']
+		password = request.POST['password']
+		cpassword = request.POST['cpassword']
+
+
+		if password == cpassword:
+			if User.objects.filter(username = username):
+				messages.error(request,'The Username is already used')
+				return redirect('/signup')
+
+			elif User.objects.filter(email = email).exists():
+				messages.error(request,'The email is already used.')
+				return redirect('/signup')
+
+			else:
+				user = User.objects.create_user(
+
+					username = username,
+					email = email,
+					password = password
+
+					)
+
+				user.save()
+				return redirect('/')
+
+
+		else:
+			messages.error(request,'Password does not match!.')
+			return redirect('/signup')
+		
+	    	
+
+	return render(request,'register.html')    		
 

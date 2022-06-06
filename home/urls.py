@@ -6,5 +6,7 @@ urlpatterns = [
     path('subcat/<slug>',SubCategoryView.as_view(),name = 'subcat'),
     path('detail/<slug>',DetailView.as_view(),name = 'detail'),
     path('search',SearchView.as_view(),name = 'search'),
+     path('signup',signup,name = 'signup'),
+
 
 ]
