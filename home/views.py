@@ -43,8 +43,11 @@ class SearchView(BaseView):
 		self.views['search.for'] = query
 		return render(request,'search.html', self.views)
 
-from django.contrib.messages import get_messages
+from django.contrib import messages,auth
 from django.contrib.auth.models import User
+from django.contrib.auth import login,logout,authenticate
+
+
 def signup(request):
 	if request.method == "POST":
 		username = request.POST['username']
@@ -81,5 +84,31 @@ def signup(request):
 		
 	    	
 
-	return render(request,'register.html')    		
+	return render(request,'register.html')    	
+
+
+
+def login(request):
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+
+
+		user = auth.authenticate(username = username, password = password)
+
+		if user is not None:
+			auth.login(request,user)
+			return redirect('/')
+
+		else:
+			messages.error(request,'Username or Password does not match!')
+			return redirect('/login')
+
+	return render(request,'login.html')
+
+
+def logout(request):
+	auth.logout(request)
+	return redirect('/')
+
 
